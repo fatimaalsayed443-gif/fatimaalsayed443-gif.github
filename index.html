@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102d2b">
+<title>مِرساة الذاكرة القرآنية</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#102d2b;color:#f8f4e9;font-family:Tahoma,Arial,sans-serif}
+#app{max-width:850px;margin:auto;min-height:100vh;background:#102d2b}
+.hero{padding:25px 18px;text-align:center;background:radial-gradient(ellipse at top,#37665a,#102d2b 72%);border-bottom:1px solid #bd9c51}
+.symbol{font-size:43px}h1{font-size:clamp(23px,5vw,32px);color:#f1d58b;margin:7px}.sub{color:#d7e2d5;font-size:13px;line-height:1.9}
+.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:17px}.stat{background:#ffffff12;border:1px solid #ffffff25;border-radius:12px;padding:9px 15px;font-size:13px}.stat b{color:#f4d78c;font-size:19px;display:block;margin-top:3px}
+.content{padding:17px;max-width:760px;margin:auto}.progress{height:8px;background:#ffffff20;border-radius:20px;overflow:hidden;margin:8px 0 18px}.progress span{display:block;height:100%;background:#e6c475;width:0;transition:.3s}
+.gategrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:12px 0 20px}.gate{background:#1b403b;border:1px solid #54766a;border-radius:12px;padding:10px 3px;text-align:center;color:#e9e4d5;font-size:11px;cursor:pointer;min-width:0}.gate .emoji{font-size:23px;display:block;margin-bottom:5px}.gate.active{border:2px solid #e7c879;background:#34584c}.gate.locked{opacity:.42;cursor:not-allowed}
+.panel{background:#f8f3e8;color:#233a32;border-radius:18px;padding:19px;margin:12px 0;box-shadow:0 8px 25px #0002}.tag{display:inline-block;background:#e9dfc3;color:#6d5625;border-radius:30px;padding:5px 11px;font-size:12px}h2{font-size:21px;margin:12px 0;color:#244c40}.instruction{font-size:14px;line-height:1.9;color:#52635a}
+.verse{background:#eee7d6;border:1px solid #d7c69c;border-radius:13px;padding:17px;text-align:center;font-size:21px;line-height:2;color:#244c40;margin:15px 0}.choices{display:grid;gap:9px;margin-top:14px}
+button{font:inherit;cursor:pointer}.choice{border:1px solid #c9c1ae;background:#fffdf8;color:#29453a;border-radius:12px;padding:13px;text-align:right;line-height:1.7;font-size:15px}.choice.selected{border:2px solid #ad873d;background:#f6efd9}.choice:disabled{cursor:default;opacity:1}
+.mainbtn{border:0;border-radius:12px;background:#bd984b;color:#142f29;font-weight:bold;padding:13px 20px;width:100%;margin-top:12px}.secondary{border:1px solid #b89a59;background:transparent;color:#29483d;border-radius:11px;padding:11px 15px;width:100%;margin-top:9px}
+.feedback{padding:12px;border-radius:12px;margin-top:13px;font-size:14px;line-height:1.8;display:none}.good{display:block;background:#e3f0e4;color:#245b38}.bad{display:block;background:#f8e8df;color:#88432e}
+.small{font-size:12px;color:#b9c5b9;line-height:1.8}.fieldlabel{display:block;font-size:12px;color:#e8dfc8;margin-top:17px}input{width:100%;padding:13px;border:1px solid #c9c1ae;border-radius:10px;font:inherit;font-size:16px;color:#233a32;background:white;margin-top:10px}
+.hidden{display:none!important}.result{text-align:center;padding:20px 10px}.result .big{font-size:55px}.footer{text-align:center;padding:18px;color:#d4d5c4;font-size:12px}
+@media(max-width:420px){.gate{font-size:9px;padding:8px 1px}.gate .emoji{font-size:20px}.verse{font-size:19px}}
+</style>
+</head>
+<body><main id="app">
+<header class="hero"><div class="symbol">⚓</div><h1>مِرْساةُ الذَّاكِرَةِ القُرْآنِيَّة</h1><div class="sub">رحلة تثبيت الآيات واستعادة الحفظ<br>لا تحفظي الآية فقط... اكتشفي مفتاح استرجاعها</div>
+<div class="stats"><div class="stat">النقاط<b id="score">٠</b></div><div class="stat">النجوم<b id="stars">٠ ⭐</b></div><div class="stat">البوابات<b id="completed">٠ / ٥</b></div></div></header>
+<section class="content">
+<label class="fieldlabel" for="student">اسم الطالبة المشاركة</label><input id="student" placeholder="اكتبي اسمك هنا" maxlength="35">
+<div style="display:flex;justify-content:space-between;font-size:12px;color:#e8dfc8;margin-top:17px"><span>تقدم الرحلة</span><span id="percent">٠٪</span></div><div class="progress"><span id="bar"></span></div>
+<div class="gategrid" id="gategrid"></div>
+<div id="game"><div class="panel"><span class="tag" id="stage">البوابة الأولى</span><h2 id="gateTitle">مفتاح البداية</h2><div class="instruction" id="intro"></div><div id="task"></div><div class="feedback" id="feedback" role="status" aria-live="polite"></div><div id="nextwrap" class="hidden"><button class="mainbtn" id="next">الانتقال إلى البوابة التالية ←</button></div></div></div>
+<div id="final" class="panel result hidden"><div class="big">🏆</div><h2>أحسنتِ! أنقذتِ مدينة الذاكرة</h2><p id="finalname"></p><div class="verse" id="finalscore"></div><p id="finalmsg" class="instruction"></p><button class="mainbtn" id="restart">إعادة الرحلة من البداية</button><button class="secondary" id="print">طباعة تقرير النتيجة</button></div>
+<p class="small" style="text-align:center;margin-top:12px">نسخة تجريبية تعليمية بمقاطع مختارة من جزء عمّ. لا تغني عن التسميع على معلمة متقنة.</p></section><footer class="footer">بالعلم والعمل يثبت الحفظ 🌿</footer></main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const gates=[
+{name:'مفتاح البداية',emoji:'🗝️',intro:'تذكّري أن نهاية الآية قد تكون مفتاحًا لبدايتها. اختاري البداية الصحيحة.',kind:'choice',q:'أي بداية ترتبط بخاتمة الآية: «مِنَ الْجِنَّةِ وَالنَّاسِ»؟',opts:['قُلْ أَعُوذُ بِرَبِّ النَّاسِ','قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ','قُلْ هُوَ اللَّهُ أَحَدٌ'],correct:0,explain:'أحسنتِ! هذه خاتمة سورة الناس، ومفتاح بدايتها: «قُلْ أَعُوذُ بِرَبِّ النَّاسِ».',why:'تذكّري الربط بين مطلع السورة وخاتمتها.'},
+{name:'مختبر المتشابهات',emoji:'🔎',intro:'قارني بين مطلعي السورتين واكتشفي الكلمة التي تميّز كلًّا منهما.',kind:'choice',q:'ما الكلمة التي تميّز مطلع سورة الفلق عن مطلع سورة الناس؟',opts:['الْفَلَقِ','النَّاسِ','أَحَدٌ'],correct:0,explain:'صحيح! كلمة «الْفَلَقِ» تميّز مطلع سورة الفلق، بينما «النَّاسِ» في مطلع سورة الناس.',why:'انتبهي إلى الكلمة الأخيرة في عبارة الاستعاذة.'},
+{name:'جسر التسلسل',emoji:'🌉',intro:'الآيات حلقات مترابطة. اختاري الآية التي تأتي بعد العبارة المعروضة.',kind:'choice',q:'ما الآية التي تأتي بعد: «لَمْ يَلِدْ وَلَمْ يُولَدْ» من سورة الإخلاص؟',opts:['وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ','اللَّهُ الصَّمَدُ','قُلْ هُوَ اللَّهُ أَحَدٌ'],correct:0,explain:'أحسنتِ! هذه خاتمة سورة الإخلاص، وتأتي بعد «لَمْ يَلِدْ وَلَمْ يُولَدْ».',why:'تدرّبي على ربط كل آية بالآية التي تليها.'},
+{name:'مرآة الاسترجاع',emoji:'🪞',intro:'حاولي استرجاع الكلمة الناقصة من ذاكرتك، ثم تحققي من إجابتك.',kind:'input',q:'أكملي الآية من سورة الكوثر: «إِنَّا أَعْطَيْنَاكَ ...»',correctText:'الْكَوْثَرَ',accepted:['الكوثر','الْكَوْثَرَ','كوثر'],explain:'ممتاز! الكلمة هي «الْكَوْثَرَ». سمّعي سورة الكوثر كاملة على معلمتك.',why:'راجعي سورة الكوثر، ثم أعيدي المحاولة.'},
+{name:'كنز الإتقان',emoji:'💎',intro:'حان وقت استعادة ما تعثّرتِ فيه. هذه البوابة تعيد تدريبك على مواضع الخطأ.',kind:'review'}];
+let current=0,score=0,completed=new Set(),mistakes=[],answered=false;
+const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+function update(){$('score').textContent=ar(score);$('stars').textContent=ar(Math.floor(score/10))+' ⭐';$('completed').textContent=ar(completed.size)+' / ٥';$('percent').textContent=ar(completed.size*20)+'٪';$('bar').style.width=(completed.size*20)+'%';$('gategrid').innerHTML=gates.map((g,i)=>`<button class="gate ${i===current?'active':''} ${i>0&&!completed.has(i-1)?'locked':''}" data-i="${i}" ${i>0&&!completed.has(i-1)?'disabled':''}><span class="emoji">${completed.has(i)?'✅':g.emoji}</span>${g.name}</button>`).join('');document.querySelectorAll('#gategrid button').forEach(b=>b.onclick=()=>showGate(+b.dataset.i))}
+function feedback(ok,msg){$('feedback').className='feedback '+(ok?'good':'bad');$('feedback').textContent=msg}
+function complete(i){if(completed.has(i))return;completed.add(i);answered=true;update();$('nextwrap').classList.remove('hidden');$('next').textContent=i===4?'عرض تقرير الرحلة 🏆':'البوابة التالية ←'}
+function showGate(i){current=i;answered=false;$('final').classList.add('hidden');$('game').classList.remove('hidden');let g=gates[i];$('stage').textContent='البوابة '+ar(i+1)+' من ٥';$('gateTitle').textContent=g.name;$('intro').textContent=g.intro;$('feedback').className='feedback';$('feedback').textContent='';$('nextwrap').classList.add('hidden');
+if(g.kind==='choice'){$('task').innerHTML=`<div class="verse">${g.q}</div><div class="choices">${g.opts.map((o,j)=>`<button class="choice" data-a="${j}">${o}</button>`).join('')}</div>`;document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>choice(+b.dataset.a))}
+else if(g.kind==='input'){$('task').innerHTML=`<div class="verse">${g.q}</div><input id="fill" placeholder="اكتبي الكلمة الناقصة"><button class="mainbtn" id="checkfill">تحققي من الإجابة</button>`;$('checkfill').onclick=checkFill;$('fill').onkeydown=e=>{if(e.key==='Enter')checkFill()}}
+else{let pool=mistakes.filter(m=>!m.reviewed);if(pool.length){let m=pool[0],q=gates[m.id];$('task').innerHTML=`<div class="verse">${q.q}</div>`+(q.opts?`<div class="choices">${q.opts.map((o,j)=>`<button class="choice" data-r="${j}">${o}</button>`).join('')}</div>`:`<input id="reviewfill" placeholder="اكتبي الكلمة الصحيحة"><button class="mainbtn" id="checkreview">تحققي</button>`);if(q.opts)document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{if(+b.dataset.r===q.correct){m.reviewed=true;score+=5;feedback(true,'أحسنتِ! استعدتِ الإجابة الصحيحة.');reviewFinish()}else feedback(false,'حاولي مرة أخرى وركّزي على الكلمة المفتاحية.')});else $('checkreview').onclick=()=>{let v=norm($('reviewfill').value);if(['الكوثر','كوثر'].includes(v)){m.reviewed=true;score+=5;feedback(true,'أحسنتِ! استعدتِ الإجابة الصحيحة.');reviewFinish()}else feedback(false,'راجعي الكلمة ثم حاولي مرة أخرى.')}}
+else{$('task').innerHTML='<div class="verse">ما الكلمة التي تميّز مطلع سورة الفلق؟</div><div class="choices"><button class="choice" data-last="1">الْفَلَقِ</button><button class="choice" data-last="0">النَّاسِ</button><button class="choice" data-last="0">أَحَدٌ</button></div>';document.querySelectorAll('[data-last]').forEach(b=>b.onclick=()=>{if(b.dataset.last==='1'){score+=10;feedback(true,'رائع! أثبتِّ قدرتك على استرجاع مفتاح السورة.');complete(4)}else feedback(false,'تذكّري الفرق بين مطلع سورة الفلق ومطلع سورة الناس.')})}}
+update()}
+function norm(s){return (s||'').trim().replace(/[ًٌٍَُِّْٰـ]/g,'')}
+function choice(j){if(answered)return;let g=gates[current];if(j===g.correct){score+=10;feedback(true,g.explain);complete(current)}else{mistakes.push({id:current,reviewed:false});feedback(false,'ليست هذه الإجابة الصحيحة. '+g.why);answered=true;let b=document.createElement('button');b.className='secondary';b.textContent='إعادة المحاولة';b.onclick=()=>showGate(current);$('task').appendChild(b)}update()}
+function checkFill(){if(answered)return;let v=norm($('fill').value);if(['الكوثر','كوثر'].includes(v)){score+=10;feedback(true,gates[3].explain);complete(3)}else{mistakes.push({id:3,reviewed:false});feedback(false,gates[3].why);answered=true;let b=document.createElement('button');b.className='secondary';b.textContent='إعادة المحاولة';b.onclick=()=>showGate(3);$('task').appendChild(b)}update()}
+function reviewFinish(){update();if(mistakes.every(m=>m.reviewed))complete(4)}
+$('next').onclick=()=>current===4?finalize():showGate(current+1);
+function finalize(){$('game').classList.add('hidden');$('final').classList.remove('hidden');let name=$('student').value.trim()||'بطلة الذاكرة';$('finalname').textContent='أحسنتِ يا '+name+'!';$('finalscore').textContent='مجموع نقاطكِ: '+ar(score)+' نقطة';$('finalmsg').textContent=mistakes.length?'أنهيتِ البوابات. راجعي مواضع التعثر مع معلمتك، ثم اختبري حفظك بعد يوم وبعد أسبوع.':'اجتزتِ التحديات دون أخطاء مسجلة! احرصي على التسميع والمراجعة المؤجلة.'}
+$('restart').onclick=()=>{current=0;score=0;completed.clear();mistakes=[];showGate(0);update()};$('print').onclick=()=>window.print();showGate(0);
+})();
+</script></body></html>
